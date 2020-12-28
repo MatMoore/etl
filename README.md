@@ -31,6 +31,8 @@ sql_alchemy_conn = postgres://etl:etl@localhost/airflow
 executor = LocalExecutor
 ```
 
+By default `dags_folder` will be set to `$AIRFLOW_HOME/dags`. To run these dags, configure it to point to the `src/dags` directory ([either in the airflow config or via environment variables](https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html#dags-folder)).
+
 Run `airflow initdb`
 
 ### Database setup
