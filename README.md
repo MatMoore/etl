@@ -43,7 +43,7 @@ Create a database user as well:
 ```
 sudo -u postgres psql
 > create user <dbusername> with password '<dbpassword>';
-> grant all privileges on dbname to <dbusername>;
+> grant all privileges on database dbname to <dbusername>;
 ```
 
 ### Generate API keys
