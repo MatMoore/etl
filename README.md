@@ -18,7 +18,7 @@ Install Python 3.8.
 ```
 python -m venv env
 . env/bin/activate
-pip install -r requirements.txt
+pip install -r requirements.txt --use-deprecated legacy-resolver
 ```
 
 ### Airflow setup
@@ -59,13 +59,27 @@ AIRTABLE_API_KEY=####
 AIRFLOW_CONN_POSTGRES_MOVIES=postgresql://<dbusername>:<dbpassword>@localhost/<dbname>
 ```
 
-### Testing commands
+### Debugging commands
 ```
 # Run a task in isolation
 airflow test syncing_movie_and_tv_data create_my_ratings 2015-06-01
 
 # Backfill
 airflow backfill syncing_movie_and_tv_data -s 2020-12-06
+```
+
+### Automated tests
+There is a CI build defined in `.github/workflows/ci.yaml`.
+
+You can run this build locally using [act](https://github.com/nektos/act).
+
+```
+# Workaround for ubuntu-latest not working
+cd .github/workflows/ubuntu2004
+docker build .
+docker image tag sha256:<image hash> github-ubuntu-20.04
+
+act -P ubuntu-latest=github-ubuntu-20.04
 ```
 
 ## Pipelines

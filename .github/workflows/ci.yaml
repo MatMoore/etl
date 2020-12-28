@@ -1,0 +1,21 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8.6
+    - name: Install dependencies
+      run: |
+        pip --version
+        pip install -r requirements.txt --use-deprecated=legacy-resolver
+    - name: Test with pytest
+      run: |
+        pytest

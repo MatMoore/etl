@@ -59,14 +59,14 @@ Markdown==2.6.11
 MarkupSafe==1.1.1
 marshmallow==2.21.0
 marshmallow-enum==1.5.1
-#marshmallow-sqlalchemy==0.24.0
+marshmallow-sqlalchemy==0.24.0
 msgpack==1.0.0
 natsort==7.0.1
 numpy==1.19.4
 packaging==20.4
 pandas==1.1.4
 pastel==0.2.1
-pendulum==1.4.4
+#pendulum==1.4.4
 pexpect==4.8.0
 pkginfo==1.6.1
 poetry==1.1.4
