@@ -5,17 +5,64 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+    container: python:3.8.7
+
+    services:
+      postgres:
+        image: postgres:10.8
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+        - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8.6
+
+    - name: Install postgresql-client package
+      run: |
+        apt-get update
+        apt-get install --yes --no-install-recommends postgresql-client
+
+    - name: Create database
+      run: |
+        createdb airflow
+      env:
+        PGUSER: postgres
+        PGPASSWORD: postgres
+        PGHOST: postgres
+
     - name: Install dependencies
       run: |
+        python -m venv env
+        . env/bin activate
         pip --version
+        pip install wheel
         pip install -r requirements.txt --use-deprecated=legacy-resolver
+        pip list
+
+    - name: db init
+      env:
+        AIRFLOW__CORE__UNIT_TEST_MODE: True
+        AIRFLOW__CORE__DAGS_FOLDER: src/dags
+        AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgres://postgres:postgres@postgres/airflow
+        AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      run: |
+        . env/bin activate
+        airflow initdb
+
     - name: Test with pytest
       run: |
+        . env/bin activate
         pytest
+
+      env:
+        AIRFLOW__CORE__UNIT_TEST_MODE: True
+        AIRFLOW__CORE__DAGS_FOLDER: src/dags
+        AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgres://postgres:postgres@postgres/airflow
+        AIRFLOW__CORE__EXECUTOR: LocalExecutor
+
+  

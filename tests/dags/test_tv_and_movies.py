@@ -1,8 +1,11 @@
 import airflow
 from airflow.models import DagBag
 from airflow.configuration import conf
+from os import environ
 
 conf.load_test_config()
+
+environ['AIRTABLE_API_KEY'] = 'xxxx'
 
 
 def test_dagbag_imports():
